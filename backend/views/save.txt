@@ -1,0 +1,63 @@
+// Save Data 
+            document.getElementById('saveDistrictButton').addEventListener('click', async () => {
+              const districtName = document.getElementById('districtName').value;
+
+              if (!districtName) {
+                // If the input is empty, show a toast notification
+                Toastify({
+                  text: "District name is required",
+                  duration: 3000,
+                  gravity: "top",
+                  position: "right",
+                  backgroundColor: "red",
+                }).showToast();
+                return;
+              }
+
+              try {
+                const response = await fetch('/districts', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({ dis_name: districtName }),
+                });
+
+                if (response.ok) {
+                  // If the request was successful, show a success notification
+                  Toastify({
+                    text: "District saved successfully",
+                    duration: 3000,
+                    gravity: "top",
+                    position: "right",
+                    backgroundColor: "green",
+                  }).showToast();
+                  document.getElementsByTagName(input).clear
+                  // Optionally, refresh the table or do something else
+                  // For example: location.reload(); or fetch and update your districts table
+
+                  // Close the modal
+                  $('#addDistrictModal').modal('hide');
+                } else {
+                  // If the request failed, show an error notification
+                  const errorData = await response.json();
+                  Toastify({
+                    text: errorData.message || "Failed to save district",
+                    duration: 3000,
+                    gravity: "top",
+                    position: "right",
+                    backgroundColor: "red",
+                  }).showToast();
+                }
+              } catch (error) {
+                // Show a toast notification for network errors
+                Toastify({
+                  text: "Network error, please try again",
+                  duration: 3000,
+                  gravity: "top",
+                  position: "right",
+                  backgroundColor: "red",
+                }).showToast();
+              }
+            });
+          });
